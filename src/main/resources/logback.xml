@@ -1,0 +1,17 @@
+<configuration>
+    <!-- Уровень по умолчанию для всего приложения -->
+    <root level="WARN">
+        <appender-ref ref="CONSOLE" />
+    </root>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %-5level [%thread] %logger - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Можно детальнее логировать только свой пакет -->
+    <logger name="org" level="WARN" additivity="false">
+        <appender-ref ref="CONSOLE" />
+    </logger>
+</configuration>
