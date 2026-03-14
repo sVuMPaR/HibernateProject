@@ -7,6 +7,7 @@ import io.lettuce.core.api.sync.RedisStringCommands;
 import lombok.extern.slf4j.Slf4j;
 import org.dao.CountryDAO;
 import org.domain.*;
+import org.flywaydb.core.Flyway;
 import org.hibernate.*;
 import org.redis.*;
 import org.hibernate.cfg.Configuration;
@@ -94,6 +95,9 @@ public class Main {
     }
 
     public static void main(String[] args) {
+        //Запуск Flyway
+        runMigrations();
+
         SessionFactory factory = prepareRelationalDB();
         Main app = new Main(factory, new CountryDAO(factory), RedisClient.create(RedisURI.create("localhost", 6379)));
         List<CityCountry> cityCountries = app.fetchAllCityCountries();
@@ -143,5 +147,18 @@ public class Main {
                 .addProperties(properties)
                 .buildSessionFactory();
     }
+
+    private static void runMigrations() {
+        String dbUser = "root";
+        String dbPassword = "root";
+
+        Flyway flyway = Flyway.configure()
+                .dataSource("jdbc:mysql://localhost:3306/world", dbUser, dbPassword)
+                .baselineOnMigrate(true)
+                .baselineVersion("0")
+                .load();
+        flyway.migrate();
+    }
+
 }
 

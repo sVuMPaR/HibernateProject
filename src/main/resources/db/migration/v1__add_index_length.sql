@@ -1,0 +1,1 @@
+CREATE INDEX idx_city_name ON city(name);
